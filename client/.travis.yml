@@ -1,0 +1,25 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t omkarpatil16/react-test -f ./client/Dockerfile.dev ./client
+
+scripts:
+  - docker run -e CI=true omkarpatil16/react-test npm test
+
+after_success:
+  - docker build -t omkarpatil16/mul-clt ./client
+  - docker build -t omkarpatil16/mul-ngx ./nginx
+  - docker build -t omkarpatil16/mul-ser ./server
+  - docker build -t omkarpatil16/mul-wrk ./worker
+  # Login to Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Pushing Image to Docker Hub
+  - docker push omkarpatil16/mul-clt
+  - docker push omkarpatil16/mul-ngx
+  - docker push omkarpatil16/mul-ser
+  - docker push omkarpatil16/mul-wrk
