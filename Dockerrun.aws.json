@@ -1,0 +1,33 @@
+{
+	"AWSEBDockerrunVersion": "2",
+	"containerDefinitions": [{
+			"name": "client",
+			"image": "omkarpatil16/mul-clt",
+			"hostname": "client",
+			"essential": "true"
+		},
+		{
+			"name": "server",
+			"image": "omkarpatil16/mul-ser",
+			"hostname": "api",
+			"essential": "false"
+		},
+		{
+			"name": "worker",
+			"image": "omkarpatil16/mul-wrk",
+			"hostname": "worker",
+			"essential": "false"
+		},
+		{
+			"name": "nginx",
+			"image": "omkarpatil16/mul-ngx",
+			"hostname": "nginx",
+			"essentail": "true",
+			"portMappings": [{
+				"hostPort": 80,
+				"contaierPort": 80
+			}],
+			"links": ["client", "server"]
+		}
+	]
+}
